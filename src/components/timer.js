@@ -11,36 +11,34 @@ import style from './style';
 
 class Timer extends React.Component {
   state = {
+    days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
-  }
+  };
 
   componentDidMount() {
     const { time, play } = this.props;
     const { hours, minutes, seconds } = TransformUtils.formatNumberToTime(time);
-    this.setState({
-      hours,
-      minutes,
-      seconds,
-    }, () => {
-      if (play) {
-        this.timer = setInterval(
-          () => this.updateTime(),
-          1000,
-        );
-      }
-    });
+    this.setState(
+      {
+        hours,
+        minutes,
+        seconds,
+      },
+      () => {
+        if (play) {
+          this.timer = setInterval(() => this.updateTime(), 1000);
+        }
+      },
+    );
   }
 
   shouldComponentUpdate(nextProps) {
     const { play } = this.props;
     if (nextProps.play !== play) {
       if (nextProps.play) {
-        this.timer = setInterval(
-          () => this.updateTime(),
-          1000,
-        );
+        this.timer = setInterval(() => this.updateTime(), 1000);
       } else {
         clearInterval(this.timer);
       }
@@ -56,18 +54,30 @@ class Timer extends React.Component {
     const { hours, minutes, seconds } = this.state;
     const newState = TransformUtils.addTime(hours, minutes, seconds);
     this.setState(prevState => ({ ...prevState, ...newState }));
-  }
+  };
 
   render() {
     const { wrapperStyle, flipNumberProps } = this.props;
-    const { hours, minutes, seconds } = this.state;
+    const {
+      hours, minutes, seconds, days,
+    } = this.state;
     return (
       <View style={[style.wrapper, wrapperStyle]}>
-        {!!hours && <FlipNumber number={hours} unit="hours" {...flipNumberProps} />}
+        {!!days && (
+          <FlipNumber number={days} unit="days" {...flipNumberProps} />
+        )}
         <Separator />
-        {!!minutes && <FlipNumber number={minutes} unit="minutes" {...flipNumberProps} />}
+        {!!hours && (
+          <FlipNumber number={hours} unit="hours" {...flipNumberProps} />
+        )}
         <Separator />
-        {!!seconds && <FlipNumber number={seconds} unit="seconds" {...flipNumberProps} />}
+        {!!minutes && (
+          <FlipNumber number={minutes} unit="minutes" {...flipNumberProps} />
+        )}
+        <Separator />
+        {!!seconds && (
+          <FlipNumber number={seconds} unit="seconds" {...flipNumberProps} />
+        )}
       </View>
     );
   }
@@ -79,10 +89,7 @@ Timer.defaultProps = {
 };
 
 Timer.propTypes = {
-  time: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]).isRequired,
+  time: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   play: PropTypes.bool,
   wrapperStyle: PropTypes.object,
   flipNumberProps: PropTypes.shape({

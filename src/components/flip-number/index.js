@@ -14,7 +14,7 @@ function FlipNumber({
   let previousNumber = number - 1;
   if (unit !== 'hours') {
     previousNumber = previousNumber === -1 ? 59 : previousNumber;
-  } else {
+  } else if (unit !== 'days') {
     previousNumber = previousNumber === -1 ? 23 : previousNumber;
   }
   number = number < 10 ? `0${number}` : number;
@@ -58,7 +58,7 @@ FlipNumber.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]).isRequired,
-  unit: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  unit: PropTypes.oneOf(['days', 'hours', 'minutes', 'seconds']),
   size: PropTypes.number,
   perspective: PropTypes.number,
   numberWrapperStyle: PropTypes.object,
